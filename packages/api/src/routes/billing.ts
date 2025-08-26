@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import Razorpay from "razorpay";
 import crypto from "node:crypto";
 import { z } from "zod";
+import { writeAudit } from "../utils/audit";
 
 export async function billingRoutes(app: FastifyInstance) {
 	const key_id = process.env.RAZORPAY_KEY_ID || "";
@@ -31,6 +32,7 @@ export async function billingRoutes(app: FastifyInstance) {
 			.digest("hex");
 		if (expected !== signature) return reply.code(401).send({ ok: false });
 		app.log.info({ event: req.body?.event }, "Razorpay webhook");
+		await writeAudit(undefined, "billing.webhook", "Razorpay", req.body);
 		return { ok: true };
 	});
 }

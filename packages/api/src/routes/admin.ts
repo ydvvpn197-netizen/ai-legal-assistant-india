@@ -1,6 +1,8 @@
 import { FastifyInstance } from "fastify";
 import { prisma } from "@aila/db";
 import { z } from "zod";
+import { getUserIdFromRequest } from "../utils/auth";
+import { writeAudit } from "../utils/audit";
 
 export async function adminRoutes(app: FastifyInstance) {
 	app.get("/api/v1/admin/users", async () =>
@@ -31,6 +33,11 @@ export async function adminRoutes(app: FastifyInstance) {
 			return reply.code(400).send({ error: parsed.error.flatten() });
 		const tpl = await prisma.documentTemplate.create({
 			data: parsed.data as any,
+		});
+		const actorId = getUserIdFromRequest(req);
+		await writeAudit(actorId, "template.create", "DocumentTemplate", {
+			id: tpl.id,
+			slug: tpl.slug,
 		});
 		return tpl;
 	});
