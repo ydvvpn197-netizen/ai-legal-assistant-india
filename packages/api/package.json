@@ -22,7 +22,8 @@
 		"argon2": "^0.40.3",
 		"jsonwebtoken": "^9.0.2",
 		"node-fetch": "^3.3.2",
-		"openapi3-ts": "^4.3.1"
+		"openapi3-ts": "^4.3.1",
+		"razorpay": "^2.9.5"
 	},
 	"devDependencies": {
 		"typescript": "^5.5.4",

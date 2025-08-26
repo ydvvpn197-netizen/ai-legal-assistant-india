@@ -7,6 +7,11 @@ import { prisma } from "@aila/db";
 import { chatRoutes } from "./routes/chat";
 import { sourceRoutes } from "./routes/sources";
 import { documentRoutes } from "./routes/documents";
+import { authRoutes } from "./routes/auth";
+import { complianceRoutes } from "./routes/compliance";
+import { adminRoutes } from "./routes/admin";
+import { billingRoutes } from "./routes/billing";
+import { buildOpenApi } from "./openapi";
 import fastifyStatic from "@fastify/static";
 import path from "node:path";
 
@@ -44,6 +49,12 @@ async function buildServer() {
 	await chatRoutes(app);
 	await sourceRoutes(app);
 	await documentRoutes(app);
+	await authRoutes(app);
+	await complianceRoutes(app);
+	await adminRoutes(app);
+	await billingRoutes(app);
+
+	app.get("/openapi.json", async () => buildOpenApi());
 
 	return app;
 }
