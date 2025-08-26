@@ -1,20 +1,19 @@
 {
-  "name": "@aila/ai",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "tsc -b"
-  },
-  "dependencies": {
-    "@aila/db": "workspace:*",
-    "zod": "^3.23.8",
-    "openai": "^4.56.0",
-    "langchain": "^0.2.13",
-    "pdf-parse": "^1.1.1"
-  },
-  "devDependencies": {
-    "typescript": "^5.5.4"
-  }
+	"name": "@aila/ai",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "tsc -b"
+	},
+	"dependencies": {
+		"@aila/db": "workspace:*",
+		"zod": "^3.23.8",
+		"openai": "^4.56.0",
+		"langchain": "^0.2.13",
+		"pdf-parse": "^1.1.1"
+	},
+	"devDependencies": {
+		"typescript": "^5.5.4"
+	}
 }
-

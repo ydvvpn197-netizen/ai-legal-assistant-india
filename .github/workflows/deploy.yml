@@ -1,75 +1,74 @@
 name: Deploy to Server
 
 on:
-  workflow_dispatch:
-    inputs:
-      server_host:
-        description: "SSH host (user@host)"
-        required: true
-      app_domain:
-        description: "APP domain"
-        required: true
-      admin_domain:
-        description: "ADMIN domain"
-        required: true
-      api_domain:
-        description: "API domain"
-        required: true
-      image_tag:
-        description: "Image tag (default: latest)"
-        required: false
-        default: "latest"
+    workflow_dispatch:
+        inputs:
+            server_host:
+                description: "SSH host (user@host)"
+                required: true
+            app_domain:
+                description: "APP domain"
+                required: true
+            admin_domain:
+                description: "ADMIN domain"
+                required: true
+            api_domain:
+                description: "API domain"
+                required: true
+            image_tag:
+                description: "Image tag (default: latest)"
+                required: false
+                default: "latest"
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    deploy:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: read
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Prepare env file
-        run: |
-          cat > deploy.env <<EOF
-          APP_DOMAIN=${{ github.event.inputs.app_domain }}
-          ADMIN_DOMAIN=${{ github.event.inputs.admin_domain }}
-          API_DOMAIN=${{ github.event.inputs.api_domain }}
-          DATABASE_URL=${{ secrets.DATABASE_URL }}
-          AUTH_SECRET=${{ secrets.AUTH_SECRET }}
-          LLM_PROVIDER=${{ secrets.LLM_PROVIDER }}
-          LLM_API_KEY=${{ secrets.LLM_API_KEY }}
-          NEXT_PUBLIC_APP_NAME="AI Legal Assistant (India)"
-          S3_ENDPOINT=${{ secrets.S3_ENDPOINT }}
-          S3_BUCKET=${{ secrets.S3_BUCKET }}
-          S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}
-          S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }}
-          IMAGE_API=ghcr.io/${{ github.repository }}/api:${{ github.event.inputs.image_tag }}
-          IMAGE_WEB=ghcr.io/${{ github.repository }}/web:${{ github.event.inputs.image_tag }}
-          IMAGE_ADMIN=ghcr.io/${{ github.repository }}/admin:${{ github.event.inputs.image_tag }}
-          EOF
+            - name: Prepare env file
+              run: |
+                  cat > deploy.env <<EOF
+                  APP_DOMAIN=${{ github.event.inputs.app_domain }}
+                  ADMIN_DOMAIN=${{ github.event.inputs.admin_domain }}
+                  API_DOMAIN=${{ github.event.inputs.api_domain }}
+                  DATABASE_URL=${{ secrets.DATABASE_URL }}
+                  AUTH_SECRET=${{ secrets.AUTH_SECRET }}
+                  LLM_PROVIDER=${{ secrets.LLM_PROVIDER }}
+                  LLM_API_KEY=${{ secrets.LLM_API_KEY }}
+                  NEXT_PUBLIC_APP_NAME="AI Legal Assistant (India)"
+                  S3_ENDPOINT=${{ secrets.S3_ENDPOINT }}
+                  S3_BUCKET=${{ secrets.S3_BUCKET }}
+                  S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}
+                  S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }}
+                  IMAGE_API=ghcr.io/${{ github.repository }}/api:${{ github.event.inputs.image_tag }}
+                  IMAGE_WEB=ghcr.io/${{ github.repository }}/web:${{ github.event.inputs.image_tag }}
+                  IMAGE_ADMIN=ghcr.io/${{ github.repository }}/admin:${{ github.event.inputs.image_tag }}
+                  EOF
 
-      - name: Copy files to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ github.event.inputs.server_host }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "infra/docker/docker-compose.ghcr.yml,infra/docker/Caddyfile,deploy.env"
-          target: "~/aila"
+            - name: Copy files to server
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ github.event.inputs.server_host }}
+                  username: ${{ secrets.SSH_USER }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  source: "infra/docker/docker-compose.ghcr.yml,infra/docker/Caddyfile,deploy.env"
+                  target: "~/aila"
 
-      - name: Deploy over SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ github.event.inputs.server_host }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            set -e
-            cd ~/aila
-            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
-            set -o allexport; source deploy.env; set +o allexport
-            docker compose -f docker-compose.ghcr.yml pull
-            docker compose -f docker-compose.ghcr.yml up -d
-
+            - name: Deploy over SSH
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ github.event.inputs.server_host }}
+                  username: ${{ secrets.SSH_USER }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  script: |
+                      set -e
+                      cd ~/aila
+                      docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+                      set -o allexport; source deploy.env; set +o allexport
+                      docker compose -f docker-compose.ghcr.yml pull
+                      docker compose -f docker-compose.ghcr.yml up -d

@@ -1,2 +1,1 @@
 We apply input validation, rate limiting, audit logging, and encryption in transit. Secrets are stored via environment variables; rotate regularly. Report vulnerabilities to security@localhost with details.
-

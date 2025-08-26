@@ -1,20 +1,19 @@
 {
-  "name": "@aila/web",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev -p 3000",
-    "build": "next build",
-    "start": "next start -p 3000"
-  },
-  "dependencies": {
-    "next": "14.2.5",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "next-intl": "^3.17.2",
-    "zod": "^3.23.8",
-    "tailwindcss": "^3.4.10",
-    "clsx": "^2.1.1"
-  }
+	"name": "@aila/web",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev -p 3000",
+		"build": "next build",
+		"start": "next start -p 3000"
+	},
+	"dependencies": {
+		"next": "14.2.5",
+		"react": "18.3.1",
+		"react-dom": "18.3.1",
+		"next-intl": "^3.17.2",
+		"zod": "^3.23.8",
+		"tailwindcss": "^3.4.10",
+		"clsx": "^2.1.1"
+	}
 }
-

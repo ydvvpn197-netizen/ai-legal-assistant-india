@@ -17,7 +17,8 @@ model User {
   createdAt DateTime @default(now())
   sessions  Session[]
   orgs      OrgMember[]
-  subscriptions Subscription[]
+  subscriptions Subscription[] @relation("UserSubscriptions")
+  ownedOrgs   Org[] @relation("OrgOwner")
 }
 
 enum UserRole {
@@ -30,8 +31,9 @@ model Org {
   id        String      @id @default(cuid())
   name      String
   ownerId   String
-  owner     User        @relation(fields: [ownerId], references: [id])
+  owner     User        @relation("OrgOwner", fields: [ownerId], references: [id])
   members   OrgMember[]
+  subscriptions Subscription[] @relation("OrgSubscriptions")
 }
 
 model OrgMember {
@@ -59,8 +61,8 @@ model Subscription {
   status             String
   currentPeriodEnd   DateTime
   providerCustomerId String?
-  user               User?    @relation(fields: [userId], references: [id])
-  org                Org?     @relation(fields: [orgId], references: [id])
+  user               User?    @relation("UserSubscriptions", fields: [userId], references: [id])
+  org                Org?     @relation("OrgSubscriptions", fields: [orgId], references: [id])
 }
 
 model CreditUsage {
@@ -100,6 +102,7 @@ model DocumentTemplate {
   sample    Json
   locale    String  @default("en")
   isPremium Boolean @default(false)
+  generated GeneratedDocument[]
 }
 
 model GeneratedDocument {

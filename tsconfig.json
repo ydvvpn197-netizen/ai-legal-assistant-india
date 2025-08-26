@@ -1,26 +1,25 @@
 {
-  "files": [],
-  "references": [
-    { "path": "packages/db" },
-    { "path": "packages/api" },
-    { "path": "packages/ai" },
-    { "path": "packages/ui" },
-    { "path": "apps/web" },
-    { "path": "apps/admin" },
-    { "path": "apps/mobile" }
-  ],
-  "compilerOptions": {
-    "composite": true,
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-    "verbatimModuleSyntax": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "lib": ["ES2022", "DOM"],
-    "types": ["node"]
-  }
+	"files": [],
+	"references": [
+		{ "path": "packages/db" },
+		{ "path": "packages/api" },
+		{ "path": "packages/ai" },
+		{ "path": "packages/ui" },
+		{ "path": "apps/web" },
+		{ "path": "apps/admin" },
+		{ "path": "apps/mobile" }
+	],
+	"compilerOptions": {
+		"composite": true,
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"resolveJsonModule": true,
+		"verbatimModuleSyntax": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"noEmit": true,
+		"lib": ["ES2022", "DOM"],
+		"types": ["node"]
+	}
 }
-

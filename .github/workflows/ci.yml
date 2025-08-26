@@ -1,73 +1,72 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: ankane/pgvector:latest
-        ports: ["5432:5432"]
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: aila
-        options: >-
-          --health-cmd "pg_isready -U postgres" 
-          --health-interval 5s 
-          --health-timeout 5s 
-          --health-retries 20
-      minio:
-        image: minio/minio:RELEASE.2024-07-26T20-48-21Z
-        ports: ["9000:9000", "9001:9001"]
-        env:
-          MINIO_ROOT_USER: minioadmin
-          MINIO_ROOT_PASSWORD: minioadmin
-        options: >-
-          --health-cmd "curl -f http://localhost:9000/minio/health/ready || exit 1"
-          --health-interval 5s --health-timeout 5s --health-retries 20
-        command: server /data --console-address ":9001"
+    build-and-test:
+        runs-on: ubuntu-latest
+        services:
+            postgres:
+                image: ankane/pgvector:latest
+                ports: ["5432:5432"]
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: aila
+                options: >-
+                    --health-cmd "pg_isready -U postgres" 
+                    --health-interval 5s 
+                    --health-timeout 5s 
+                    --health-retries 20
+            minio:
+                image: minio/minio:RELEASE.2024-07-26T20-48-21Z
+                ports: ["9000:9000", "9001:9001"]
+                env:
+                    MINIO_ROOT_USER: minioadmin
+                    MINIO_ROOT_PASSWORD: minioadmin
+                options: >-
+                    --health-cmd "curl -f http://localhost:9000/minio/health/ready || exit 1"
+                    --health-interval 5s --health-timeout 5s --health-retries 20
+                command: server /data --console-address ":9001"
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: "pnpm"
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 9
 
-      - name: Install deps
-        run: pnpm install --frozen-lockfile=false
+            - name: Install deps
+              run: pnpm install --frozen-lockfile=false
 
-      - name: Generate Prisma client
-        run: pnpm --filter @aila/db prisma generate
+            - name: Generate Prisma client
+              run: pnpm --filter @aila/db prisma generate
 
-      - name: Typecheck
-        run: pnpm typecheck
+            - name: Typecheck
+              run: pnpm typecheck
 
-      - name: Build
-        run: pnpm -r --filter ./packages/... --filter ./apps/... build
+            - name: Build
+              run: pnpm -r --filter ./packages/... --filter ./apps/... build
 
-      - name: Prepare DB
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/aila?schema=public
-        run: pnpm db:push
+            - name: Prepare DB
+              env:
+                  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/aila?schema=public
+              run: pnpm db:push
 
-      - name: Tests
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/aila?schema=public
-          NEXT_PUBLIC_API_URL: http://localhost:4000
-        run: pnpm test
-
+            - name: Tests
+              env:
+                  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/aila?schema=public
+                  NEXT_PUBLIC_API_URL: http://localhost:4000
+              run: pnpm test

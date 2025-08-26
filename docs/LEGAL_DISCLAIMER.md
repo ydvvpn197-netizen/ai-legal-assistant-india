@@ -1,2 +1,1 @@
 This product provides general legal information for the Indian jurisdiction and is not a substitute for advice from a licensed advocate. Do not rely on outputs as legal advice. For complex or sensitive matters, consult a qualified Indian advocate.
-
