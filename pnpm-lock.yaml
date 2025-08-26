@@ -103,6 +103,13 @@ importers:
             zod:
                 specifier: ^3.23.8
                 version: 3.25.76
+        devDependencies:
+            autoprefixer:
+                specifier: ^10.4.20
+                version: 10.4.21(postcss@8.5.6)
+            postcss:
+                specifier: ^8.4.45
+                version: 8.5.6
 
     packages/ai:
         dependencies:
@@ -3667,6 +3674,16 @@ packages:
             }
         engines: { node: ">=8.0.0" }
 
+    autoprefixer@10.4.21:
+        resolution:
+            {
+                integrity: sha512-O+A6LWV5LDHSJD3LjHYoNi4VLsj/Whi7k6zG12xTYaU4cQ8oxQGckXNX8cRHK5yOZ/ppVHe0ZBXGzSV9jXdVbQ==,
+            }
+        engines: { node: ^10 || ^12 || >=14 }
+        hasBin: true
+        peerDependencies:
+            postcss: ^8.1.0
+
     available-typed-arrays@1.0.7:
         resolution:
             {
@@ -5517,6 +5534,12 @@ packages:
                 integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==,
             }
         engines: { node: ">= 0.6" }
+
+    fraction.js@4.3.7:
+        resolution:
+            {
+                integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==,
+            }
 
     freeport-async@2.0.0:
         resolution:
@@ -7686,6 +7709,13 @@ packages:
         resolution:
             {
                 integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==,
+            }
+        engines: { node: ">=0.10.0" }
+
+    normalize-range@0.1.2:
+        resolution:
+            {
+                integrity: sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==,
             }
         engines: { node: ">=0.10.0" }
 
@@ -13169,6 +13199,16 @@ snapshots:
 
     atomic-sleep@1.0.0: {}
 
+    autoprefixer@10.4.21(postcss@8.5.6):
+        dependencies:
+            browserslist: 4.25.3
+            caniuse-lite: 1.0.30001737
+            fraction.js: 4.3.7
+            normalize-range: 0.1.2
+            picocolors: 1.1.1
+            postcss: 8.5.6
+            postcss-value-parser: 4.2.0
+
     available-typed-arrays@1.0.7:
         dependencies:
             possible-typed-array-names: 1.1.0
@@ -14530,6 +14570,8 @@ snapshots:
 
     forwarded@0.2.0: {}
 
+    fraction.js@4.3.7: {}
+
     freeport-async@2.0.0: {}
 
     fresh@0.5.2: {}
@@ -15794,6 +15836,8 @@ snapshots:
     node-stream-zip@1.15.0: {}
 
     normalize-path@3.0.0: {}
+
+    normalize-range@0.1.2: {}
 
     npm-package-arg@11.0.3:
         dependencies:
