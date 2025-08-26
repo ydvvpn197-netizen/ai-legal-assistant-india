@@ -138,6 +138,7 @@ model SourceChunk {
   sourceId  String
   chunk     String
   embedding Bytes
+  embeddingVec Unsupported("vector")?
   page      Int?
   citationMeta Json?
   source    Source @relation(fields: [sourceId], references: [id])

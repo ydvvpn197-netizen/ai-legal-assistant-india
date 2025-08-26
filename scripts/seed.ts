@@ -109,6 +109,34 @@ async function main() {
 		});
 	}
 
+	// Sample sources (10)
+	const sources = [
+		{ title: "Indian Contract Act, 1872 - Consideration", sourceType: "bare_act", jurisdiction: "India", language: "en", text: "Section 2(d) defines consideration..." },
+		{ title: "Information Technology Act, 2000 - Reasonable Security", sourceType: "bare_act", jurisdiction: "India", language: "en", text: "Section 43A provides..." },
+		{ title: "DPDP Act, 2023 - Obligations of Data Fiduciaries", sourceType: "bare_act", jurisdiction: "India", language: "en", text: "Data fiduciaries shall..." },
+		{ title: "GST Act - Thresholds", sourceType: "guideline", jurisdiction: "India", language: "en", text: "Registration thresholds include..." },
+		{ title: "Shops & Establishments - State Rules", sourceType: "guideline", jurisdiction: "India", language: "en", text: "Typical requirements include..." },
+		{ title: "Industrial Disputes Act - Termination", sourceType: "bare_act", jurisdiction: "India", language: "en", text: "Retrenchment procedures..." },
+		{ title: "Case: XYZ v. ABC (2019) - NDA Enforceability", sourceType: "judgment", jurisdiction: "India", language: "en", text: "The court held..." },
+		{ title: "Case: DEF v. GHI (2021) - Landlord-Tenant", sourceType: "judgment", jurisdiction: "India", language: "en", text: "On eviction grounds..." },
+		{ title: "Companies Act - Founders Agreements", sourceType: "bare_act", jurisdiction: "India", language: "en", text: "Shareholders rights include..." },
+		{ title: "Payment of Wages Act - Payslips", sourceType: "bare_act", jurisdiction: "India", language: "en", text: "Employers must provide..." },
+	];
+	for (const s of sources) {
+		const src = await prisma.source.create({
+			data: { title: s.title, sourceType: s.sourceType as any, url: null, jurisdiction: s.jurisdiction, language: s.language },
+		});
+		await prisma.sourceChunk.create({
+			data: {
+				sourceId: src.id,
+				chunk: s.text,
+				embedding: Buffer.alloc(0),
+				citationMeta: { note: "seed" } as any,
+				page: 1,
+			},
+		});
+	}
+
 	console.log("Seed completed", {
 		admin: admin.email,
 		free: free.email,
