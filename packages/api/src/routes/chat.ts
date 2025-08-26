@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { z } from "zod";
-import { simpleAnswer } from "@aila/ai";
+import { answerWithCitations } from "@aila/ai/dist/rag";
 
 export async function chatRoutes(app: FastifyInstance) {
 	const bodySchema = z.object({
@@ -13,7 +13,7 @@ export async function chatRoutes(app: FastifyInstance) {
 		if (!parsed.success)
 			return reply.code(400).send({ error: parsed.error.flatten() });
 		const { message } = parsed.data;
-		const answer = await simpleAnswer(message);
+		const answer = await answerWithCitations(message);
 		return { answer }; // non-stream fallback
 	});
 
@@ -28,7 +28,7 @@ export async function chatRoutes(app: FastifyInstance) {
 			Connection: "keep-alive",
 			"Access-Control-Allow-Origin": req.headers.origin || "*",
 		});
-		const answer = await simpleAnswer(message);
+		const answer = await answerWithCitations(message);
 		const chunks = answer.match(/.{1,200}/g) || [answer];
 		for (const c of chunks) {
 			reply.raw.write(`data: ${JSON.stringify({ token: c })}\n\n`);
