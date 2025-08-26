@@ -38,5 +38,19 @@ Services:
 
 See `docs/` for SECURITY, PRIVACY, and DISCLAIMER.
 
+### CI/CD
+
+- CI runs typecheck, build, and tests on push/PR (`.github/workflows/ci.yml`).
+- CD builds and pushes Docker images to GHCR on push to main (`.github/workflows/cd.yml`).
+  Images:
+  - ghcr.io/<owner>/<repo>/api:latest
+  - ghcr.io/<owner>/<repo>/web:latest
+  - ghcr.io/<owner>/<repo>/admin:latest
+
+To deploy locally with built images, use:
+```
+bash scripts/deploy.sh
+```
+
 # Legal-Assistant
 Legal Assistant
