@@ -52,5 +52,22 @@ To deploy locally with built images, use:
 bash scripts/deploy.sh
 ```
 
+### HTTPS with Caddy (one-command)
+
+- Set DNS A/AAAA records to your server IP for three domains, then set in `.env`:
+```
+APP_DOMAIN=app.example.com
+ADMIN_DOMAIN=admin.example.com
+API_DOMAIN=api.example.com
+```
+- Start the production stack (includes Caddy with automatic Let's Encrypt):
+```
+docker compose -f infra/docker/docker-compose.prod.yml up -d
+```
+- Access:
+  - https://$APP_DOMAIN
+  - https://$ADMIN_DOMAIN
+  - https://$API_DOMAIN
+
 # Legal-Assistant
 Legal Assistant

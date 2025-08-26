@@ -17,6 +17,9 @@ ENV NODE_ENV=production
 COPY --from=builder /repo/packages/api/dist ./dist
 COPY --from=builder /repo/packages/api/package.json ./package.json
 COPY --from=builder /repo/node_modules ./node_modules
+COPY packages/db/prisma ./prisma
+COPY packages/api/docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
 EXPOSE 4000
-CMD ["node", "dist/server.js"]
+ENTRYPOINT ["./docker-entrypoint.sh"]
 

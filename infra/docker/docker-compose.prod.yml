@@ -34,6 +34,7 @@ services:
       NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
       S3_ENDPOINT: ${S3_ENDPOINT}
       S3_BUCKET: ${S3_BUCKET}
+      PRISMA_SCHEMA_PATH: /app/prisma/schema.prisma
 
   web:
     build:
@@ -47,6 +48,23 @@ services:
       - "3000:3000"
 
   admin:
+  caddy:
+    image: caddy:2.8.4
+    depends_on:
+      - web
+      - admin
+      - api
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN}
+      ADMIN_DOMAIN: ${ADMIN_DOMAIN}
+      API_DOMAIN: ${API_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
     build:
       context: ../../
       dockerfile: apps/admin/Dockerfile
@@ -60,4 +78,6 @@ services:
 volumes:
   pgdata:
   miniodata:
+  caddy_data:
+  caddy_config:
 
