@@ -1,0 +1,2 @@
+We collect minimal personal data to provide the service. Prompts and documents may be processed to deliver AI features; we minimize retention and redact logs. You can delete your account and associated data at any time.
+

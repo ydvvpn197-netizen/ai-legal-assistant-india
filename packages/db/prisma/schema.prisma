@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  phone     String?  @unique
+  name      String?
+  role      UserRole @default(USER)
+  locale    String   @default("en")
+  createdAt DateTime @default(now())
+  sessions  Session[]
+  orgs      OrgMember[]
+  subscriptions Subscription[]
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  LAWYER
+}
+
+model Org {
+  id        String      @id @default(cuid())
+  name      String
+  ownerId   String
+  owner     User        @relation(fields: [ownerId], references: [id])
+  members   OrgMember[]
+}
+
+model OrgMember {
+  id     String  @id @default(cuid())
+  orgId  String
+  userId String
+  role   UserRole @default(USER)
+  org    Org     @relation(fields: [orgId], references: [id])
+  user   User    @relation(fields: [userId], references: [id])
+  @@unique([orgId, userId])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+}
+
+model Subscription {
+  id                 String   @id @default(cuid())
+  userId             String?
+  orgId              String?
+  plan               String
+  status             String
+  currentPeriodEnd   DateTime
+  providerCustomerId String?
+  user               User?    @relation(fields: [userId], references: [id])
+  org                Org?     @relation(fields: [orgId], references: [id])
+}
+
+model CreditUsage {
+  id          String   @id @default(cuid())
+  userId      String?
+  orgId       String?
+  tokensUsed  Int      @default(0)
+  messagesCount Int    @default(0)
+  period      String
+}
+
+model ChatThread {
+  id      String  @id @default(cuid())
+  userId  String?
+  orgId   String?
+  title   String
+  messages ChatMessage[]
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  threadId  String
+  role      String
+  content   String
+  citations Json?
+  tokens    Int      @default(0)
+  createdAt DateTime @default(now())
+  thread    ChatThread @relation(fields: [threadId], references: [id])
+}
+
+model DocumentTemplate {
+  id        String  @id @default(cuid())
+  slug      String  @unique
+  title     String
+  category  String
+  schema    Json
+  sample    Json
+  locale    String  @default("en")
+  isPremium Boolean @default(false)
+}
+
+model GeneratedDocument {
+  id         String  @id @default(cuid())
+  userId     String?
+  orgId      String?
+  templateId String
+  inputs     Json
+  pdfUrl     String
+  createdAt  DateTime @default(now())
+  template   DocumentTemplate @relation(fields: [templateId], references: [id])
+}
+
+model Source {
+  id          String   @id @default(cuid())
+  title       String
+  sourceType  SourceType
+  url         String?
+  jurisdiction String
+  language    String
+  chunks      SourceChunk[]
+}
+
+enum SourceType {
+  bare_act
+  judgment
+  guideline
+  custom
+}
+
+model SourceChunk {
+  id        String  @id @default(cuid())
+  sourceId  String
+  chunk     String
+  embedding Bytes
+  page      Int?
+  citationMeta Json?
+  source    Source @relation(fields: [sourceId], references: [id])
+}
+
+model Upload {
+  id          String  @id @default(cuid())
+  userId      String?
+  orgId       String?
+  url         String
+  type        String
+  textExtract String?
+  processed   Boolean @default(false)
+  tokens      Int     @default(0)
+}
+
+model ComplianceChecklist {
+  id     String @id @default(cuid())
+  name   String
+  locale String @default("en")
+  items  Json
+}
+
+model AuditLog {
+  id       String   @id @default(cuid())
+  actorId  String
+  action   String
+  entity   String
+  payload  Json
+  createdAt DateTime @default(now())
+}
+
+model Flag {
+  id       String   @id @default(cuid())
+  userId   String
+  reason   String
+  messageId String?
+  status   String   @default("open")
+}
+

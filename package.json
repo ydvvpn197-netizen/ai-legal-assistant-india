@@ -1,0 +1,35 @@
+{
+  "name": "ai-legal-assistant-india",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.6.0",
+  "scripts": {
+    "i": "pnpm install",
+    "build": "pnpm -r --filter ./packages/... --filter ./apps/... build",
+    "dev": "pnpm run dev:stack",
+    "dev:stack": "docker compose -f infra/docker/docker-compose.yml up -d --build && cross-env NODE_ENV=development concurrently -n api,web,admin -c green,cyan,magenta \"pnpm --filter @aila/api dev\" \"pnpm --filter @aila/web dev\" \"pnpm --filter @aila/admin dev\"",
+    "stop": "docker compose -f infra/docker/docker-compose.yml down -v",
+    "db:migrate": "pnpm --filter @aila/db prisma migrate deploy",
+    "db:push": "pnpm --filter @aila/db prisma db push",
+    "db:seed": "tsx scripts/seed.ts",
+    "ingest": "tsx scripts/ingest.ts",
+    "lint": "eslint .",
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "fmt": "prettier -w ."
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "concurrently": "^9.0.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.5",
+    "playwright": "^1.47.0",
+    "prettier": "^3.3.3",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  }
+}
+

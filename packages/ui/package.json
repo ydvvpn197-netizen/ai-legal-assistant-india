@@ -1,0 +1,16 @@
+{
+  "name": "@aila/ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "react": "18.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}
+
